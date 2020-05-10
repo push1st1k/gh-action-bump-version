@@ -12,7 +12,9 @@ Toolkit.run(async tools => {
   const pkg = tools.getPackageJSON()
   const event = tools.context.payload
 
-  const messages = event.commits.map(commit => commit.message + '\n' + commit.body)
+  const pullRequest = tools.context.event === 'pull_request_review' ?  event.pull_request : event;
+
+  const messages = pullRequest.commits.map(commit => commit.message + '\n' + commit.body)
 
   const commitMessage = 'version bump to'
   const isVersionBump = messages.map(message => message.toLowerCase().includes(commitMessage)).includes(true)
